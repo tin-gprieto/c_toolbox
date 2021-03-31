@@ -111,7 +111,7 @@ void test_mostrar_reporte(){
     printf(BLANCO "\n   ---------------------------------\n");
     printf("    %i pruebas corridas - %i errores - " RESET,
            __test_cantidad_de_pruebas_corridas,
-           __test_cantidad_de_pruebas_fallidas)
+           __test_cantidad_de_pruebas_fallidas);
     if(__test_cantidad_de_pruebas_fallidas == 0 )
         printf(VERDE " OK \n\n" RESET);
     else
