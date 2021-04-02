@@ -1,13 +1,15 @@
 #include "../code/interfaz/interfaz.h"
 #include "../code/tools/tools.h"
 
+#define MAX_STRING 50
+
 typedef struct estructura{
     int numero[4];
     char string[4][MAX_STRING];
     size_t cantidad;
 }estructura_t;
 
-void funcion_mostrar(void* interfaz, void* info){
+void funcion_mostrar(interfaz_t* interfaz, void* info, void* aux){
     estructura_t* vector = (estructura_t*) info;
     size_t tope = vector->cantidad;
     for(size_t i = 0; i < tope; i++){
@@ -40,9 +42,7 @@ void inicializar_informacion(estructura_t* estructura){
 }
 
 int main(){
-    dimension_t dimension = set_dimension(70,20,10);
-    estetica_t estetica = set_estetica(FONDO_BLANCO, NEGRO, CELESTE);
-    interfaz_t* interfaz = interfaz_crear(dimension, estetica);
+    interfaz_t* interfaz = interfaz_crear(set_dimension(70,20,10), set_estetica(FONDO_NEGRO, BLANCO, CELESTE));
     if(!interfaz){
         warning("la creación del interfaz");
     }
@@ -64,8 +64,8 @@ int main(){
 
     inicializar_informacion(&estructura);
 
-    informacion_insertar(interfaz, "MATERIAS", funcion_mostrar, (void*)&estructura);
-    informacion_mostrar(interfaz, 0);
+    informacion_insertar(interfaz, "MATERIAS", funcion_mostrar);
+    informacion_mostrar(interfaz, 0, &estructura, NULL);
 
     interfaz_destruir(interfaz);
     return 0;
