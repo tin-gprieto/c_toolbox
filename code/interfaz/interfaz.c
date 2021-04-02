@@ -1,6 +1,31 @@
 #include "interfaz.h"
 #include "../tools/tools.h"
 
+#define MAX_STRING 100
+#define MAX_OPCIONES 10
+
+typedef struct menu{
+    char titulo[MAX_DESCRIPCION];
+    char opciones[MAX_OPCIONES];
+    char descripciones[MAX_OPCIONES][MAX_DESCRIPCION];
+    size_t cant_opciones;
+}menu_t;
+
+typedef struct menu_info{
+    menu_t menu;
+    funcion_grafica_t mostrar;
+}menu_info_t;
+
+typedef struct interfaz{
+    char estado;
+    dimension_t dimension;
+    estetica_t estetica;
+    menu_t* menus;
+    size_t cant_menus;
+    menu_info_t* infos;
+    size_t cant_infos;
+}interfaz_t;
+
 #define FONDO "\e[1;44m"
 #define LIMPIAR "clear"
 
@@ -324,9 +349,9 @@ void menu_mostrar_opciones(interfaz_t* interfaz, size_t pos_menu){
     interfaz->estado = pedir_clave(interfaz, menu.opciones, menu.cant_opciones);
 }
 /* 
-* 
-* Pre : 
-* Post: 
+* Muestra las ocpiones de un menu información
+* Pre : Interfaz creada, Menu válido
+* Post: Opciones impresas por pantalla y pedido al usuario
 */
 void info_mostrar_opciones(interfaz_t* interfaz, menu_t menu){
     imprimir_barra(interfaz, INICIO, interfaz->estetica.color_titulos);
@@ -381,10 +406,11 @@ bool ruta_archivo_valida(char* ruta, const char* extension){
 }
 /*
 * Carga una opcion y su descripción a la última posicion de un menú
-* Pre : 
-* Post:
+* Pre : Menu creado
+* Post: Menu con nueva opción cargada
 */
 void cargar_opcion(menu_t* menu, char opcion, const char* descripcion){
+    if(!menu) return;
     size_t tope = menu->cant_opciones;
     menu->opciones[tope] = opcion;
     strcpy(menu->descripciones[tope], descripcion);
@@ -502,8 +528,8 @@ void menu_mostrar(interfaz_t* interfaz, size_t pos_menu){
 }
 
 //interfaz.h 
-int informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], funcion_grafica_t mostrar, void* informacion){
-    if(!interfaz || !mostrar || !titulo || !informacion) 
+int informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], funcion_grafica_t mostrar){
+    if(!interfaz || !mostrar || !titulo) 
         return ERROR;
     size_t espaciado = (interfaz->dimension.max - strlen(titulo)) / 2;
     if(strlen(titulo) > interfaz->dimension.max - espaciado)
@@ -516,7 +542,6 @@ int informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], fun
     }
     interfaz->infos = aux;
     interfaz->infos[tope].mostrar = mostrar;
-    interfaz->infos[tope].informacion = informacion;
 
     strcpy(interfaz->infos[tope].menu.titulo, titulo);
     interfaz->infos[tope].menu.cant_opciones = 0;
@@ -536,16 +561,15 @@ void informacion_linea(interfaz_t* interfaz, const char* color, const char* line
 }
 
 //interfaz.h 
-void informacion_mostrar(interfaz_t* interfaz, size_t menu_info){
+void informacion_mostrar(interfaz_t* interfaz, size_t menu_info, void* informacion, void* aux){
     if(!interfaz || menu_info >= interfaz->cant_infos){
         reportar_error(interfaz, "Interfaz o Menú inválidos");
         return;
     }
     system(LIMPIAR);
     info_encabezado(interfaz, menu_info);
-    void* informacion = interfaz->infos[menu_info].informacion;
     funcion_grafica_t funcion = interfaz->infos[menu_info].mostrar;
-    funcion(interfaz, informacion);
+    funcion(interfaz, informacion, aux);
     info_mostrar_opciones(interfaz, interfaz->infos[menu_info].menu);
 }
 
@@ -562,20 +586,21 @@ void interfaz_cambiar_estado(interfaz_t* interfaz, char nuevo_estado){
 }
 
 //interfaz.h
-size_t pedir_numero(interfaz_t* interfaz, const char* descripcion){
+char* pedir_string(interfaz_t* interfaz, const char* descripcion){
     imprimir_margen(interfaz->dimension.margen);
     printf("Ingrese el" VERDE "%s" RESET "que desea : ", descripcion);
-    size_t numero;
-    scanf(" %li", &numero);
-    return numero;
+    char buffer[MAX_STRING];
+    char* str ;
+    str = leer_linea(buffer, MAX_STRING, stdin);
+    return str;
 }
 
 //interfaz.h
 char* pedir_archivo(interfaz_t* interfaz, const char* extension, const char* descripcion){
-    char* ruta_archivo;
     imprimir_margen(interfaz->dimension.margen);
     printf("Ingrese la ruta del archivo de " VERDE "%s" RESET ":", descripcion);
     char buffer[MAX_STRING];
+    char* ruta_archivo;
     ruta_archivo = leer_linea(buffer, MAX_STRING, stdin);
     while(!ruta_archivo_valida(ruta_archivo, extension)){
         reportar_error(interfaz, "Hubo un problema con la ruta ingresada");
