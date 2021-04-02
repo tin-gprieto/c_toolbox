@@ -18,12 +18,12 @@ void limpiar_buffer(){
 }
 
 char* leer_linea(char* buffer, int tam_buffer, FILE* archivo){
+    if(!archivo || tam_buffer <= 0) return NULL;
     char* linea_leida = NULL;
 
     linea_leida = fgets(buffer, tam_buffer, archivo);
 
-    if(!linea_leida)
-        return NULL;
+    if(!linea_leida) return NULL;
 
     size_t final_linea = strlen(linea_leida);
 
@@ -36,27 +36,29 @@ char* leer_linea(char* buffer, int tam_buffer, FILE* archivo){
     return linea_leida;
 }
 
-void print_barra_porcentaje(size_t cantidad, size_t total){
-    if(cantidad > total){
-        warning("el cálculo del porcentaje");
-        return; 
-    }
-    float porcentaje = (((float)cantidad)/(float)total) * 100;
-    char bar[MAX_BAR];
-    for(int i = 0; i<(porcentaje/10); i++)
-        bar[i] = '0';
+char* barra_porcentaje(size_t cantidad, size_t total, size_t tamanio_barra){
+    if(total == 0 || tamanio_barra == 0) return NULL;
+    if(cantidad > total) return NULL; 
 
-    printf ("|");
-    for(int i = 0; i< MAX_BAR; i++){
-        if(bar[i] == '0'){
-            printf (FONDO_VERDE "  " RESET);
-        }else{
-            printf ("  ");
-        }
-            
+    float porcentaje = (((float)cantidad)/(float)total);
+
+    char barra[tamanio_barra];
+    barra[0] = '[';
+
+    for(int i = 1; i < porcentaje * (float)tamanio_barra; i++)
+        barra[i] = '=';
+
+    for(int i = 1; i< tamanio_barra; i++){
+        if(barra[i] != '=')
+            barra[i] = ' ';    
     }
-    printf ("|");
-    printf("%.1f \n", porcentaje);
+
+    barra[tamanio_barra - 1] = ']';
+
+    char* resultado = calloc(tamanio_barra + 20, sizeof(char));
+    if(!resultado)  return NULL;
+    sprintf(resultado, "%s      %.1f °/. \n", barra, porcentaje*100);
+    return resultado;
 }
 
 int __test_cantidad_de_pruebas_corridas = 0;

@@ -57,10 +57,11 @@
 void print_array(int* array, size_t size);
 
 /*
-* Imprime por pantalla una barra de porcentaje, teniendo el total y la cantidad sobre el mismo
-* Pre: quantity < total
+* Devuelve una barra de porcentaje, teniendo el total y la cantidad sobre el mismo
+* Pre : cantidad < total, ni total ni tamanio == 0
+* Post: NULL en caso de error o puntero a str con barra (SE DEBE LIBERAR)
 */
-void print_barra_porcentaje(size_t cantidad, size_t total);
+char* barra_porcentaje(size_t cantidad, size_t total, size_t tamanio_barra);
 
 /*
 *Imprime por pantalla una advertencia según description
@@ -75,9 +76,11 @@ void warning(const char * descripcion);
 void limpiar_buffer();
 
 /* 
-* 
-* Pre : 
-* Post: 
+* Lee una linea de un FILE* utilizando un buffer externo y la devuelve
+* FILE* stdin para leer de la terminal
+* Pre : tam_buffer mayor a 0, FILE* distinto a NULL
+* Post: Linea leida de como máximo el tamanio del buffer o NULL en caso de error
+* (buffer liberado para una próxima lectura)
 */
 char* leer_linea(char* buffer, int tam_buffer, FILE* archivo);
 
