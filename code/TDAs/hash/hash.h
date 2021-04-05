@@ -7,7 +7,7 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "../toolbox/code/TDAs/lista/lista.h"
+#include "../lista/lista.h"
 
 /* 
  * Destructor de los datos almacenados en el hash.  Cada vez que un
