@@ -26,7 +26,9 @@ void inicializar_menu(interfaz_t* interfaz){
     menu_cargar_opcion(interfaz, 0, 'D', "Cuarta_opcion");
     menu_cargar_opcion(interfaz, 1, 'A', "Primer_opcion"); 
     menu_cargar_opcion(interfaz, 1, 'B', "Segunda_opcion"); 
-    menu_cargar_opcion(interfaz, 1, 'C', "Tercer_opcion");
+    menu_cargar_opcion(interfaz, 2, 'A', "Primer_opcion"); 
+    menu_cargar_opcion(interfaz, 2, 'B', "Segunda_opcion"); 
+    menu_cargar_opcion(interfaz, 2, 'C', "Tercer_opcion");
 }
 
 void inicializar_informacion(estructura_t* estructura){
@@ -46,11 +48,15 @@ int main(){
     if(!interfaz){
         warning("la creación del interfaz");
     }
-    if(menu_insertar(interfaz, "FUNCIONES ADMINISTRATIVAS") == ERROR){
+    if(menu_insertar(interfaz, "Menu inicio", TIPO_MENU_INICIO) == ERROR){
         interfaz_destruir(interfaz);
         return ERROR;
     }
-    if(menu_insertar(interfaz, "FUNCIONES DE GESTION") == ERROR){
+    if(menu_insertar(interfaz, "Menu desarrollo", TIPO_MENU_MEDIO) == ERROR){
+        interfaz_destruir(interfaz);
+        return ERROR;
+    }
+    if(menu_insertar(interfaz, "Menu final", TIPO_MENU_FINAL) == ERROR){
         interfaz_destruir(interfaz);
         return ERROR;
     }
@@ -59,6 +65,7 @@ int main(){
     
     menu_mostrar(interfaz, 0);
     menu_mostrar(interfaz, 1);
+    menu_mostrar(interfaz, 2);
     
     estructura_t estructura;
 

@@ -9,6 +9,7 @@ typedef struct menu{
     char opciones[MAX_OPCIONES];
     char descripciones[MAX_OPCIONES][MAX_DESCRIPCION];
     size_t cant_opciones;
+    size_t cant_opc_fijas;
 }menu_t;
 
 typedef struct menu_info{
@@ -35,13 +36,12 @@ static const int FIN = 1;
 static const size_t LONGITUD_OPCION = 11;
 static const size_t LONGITUD_BARRA = 40;
 
-static const size_t SALIR = 0;
-static const size_t VOLVER = 1;
-
 #define SEP_EXTENSION "."
 
 #define DESCRIPCION_SALIR  "Salir"
 #define DESCRIPCION_VOLVER  "Volver"
+#define DESCRIPCION_AVANZAR  "Avanzar"
+#define DESCRIPCION_AVANZAR_INFO  "Avanzar / Salir"
 
 /******************************     GRÁFICA     ******************************************/
 
@@ -331,32 +331,15 @@ void imprimir_opcion(interfaz_t* interfaz, menu_t menu, size_t pos){
 * Pre : tipo_menu válido dentro los menus de interfaz, interfaz no nula
 * Post: Opciones del menu en pantalla
 */
-void menu_mostrar_opciones(interfaz_t* interfaz, size_t pos_menu){
-    menu_t menu = interfaz->menus[pos_menu];
-    if(pos_menu == 0)
-        for(size_t pos = 1; pos < menu.cant_opciones; pos++)
-            imprimir_opcion(interfaz, menu, pos);
-    else
-        for(size_t pos = 2; pos < menu.cant_opciones; pos++)
-            imprimir_opcion(interfaz, menu, pos);
+void menu_mostrar_opciones(interfaz_t* interfaz, menu_t menu){
+    for(size_t pos = menu.cant_opc_fijas; pos < menu.cant_opciones; pos++)
+        imprimir_opcion(interfaz, menu, pos);
 
     imprimir_barra(interfaz, INICIO, interfaz->estetica.color_titulos);
-    if(pos_menu != 0)
-        imprimir_opcion(interfaz, menu, VOLVER);
-    imprimir_opcion(interfaz, menu, SALIR);
 
-    imprimir_marco(interfaz, FIN);
-    interfaz->estado = pedir_clave(interfaz, menu.opciones, menu.cant_opciones);
-}
-/* 
-* Muestra las ocpiones de un menu información
-* Pre : Interfaz creada, Menu válido
-* Post: Opciones impresas por pantalla y pedido al usuario
-*/
-void info_mostrar_opciones(interfaz_t* interfaz, menu_t menu){
-    imprimir_barra(interfaz, INICIO, interfaz->estetica.color_titulos);
-    imprimir_opcion(interfaz, menu, VOLVER);
-    imprimir_opcion(interfaz, menu, SALIR);
+    for(size_t pos = 0; pos <  menu.cant_opc_fijas; pos++)
+        imprimir_opcion(interfaz, menu, pos);
+
     imprimir_marco(interfaz, FIN);
     interfaz->estado = pedir_clave(interfaz, menu.opciones, menu.cant_opciones);
 }
@@ -415,6 +398,43 @@ void cargar_opcion(menu_t* menu, char opcion, const char* descripcion){
     menu->opciones[tope] = opcion;
     strcpy(menu->descripciones[tope], descripcion);
     menu->cant_opciones ++;
+}
+
+/*
+* Evalua si el tipo de menu es un tipo válido
+* Pre : tipo de menu ingresado en menu_insertar
+* Post: Verdadero si el tipo corresponde a alguna de las constantes
+*/
+bool tipo_menu_valido(size_t tipo_menu){
+    return tipo_menu == TIPO_MENU_INICIO || tipo_menu == TIPO_MENU_MEDIO || tipo_menu == TIPO_MENU_FINAL;
+}
+
+/*
+* Inicializa las opciones fijas del menu según su tipo
+* Pre : Menú en posicion ya creado, tipo de menu válido
+* Post: Deja al menú en posición con sus opciones fijas cargadas 
+* y la cantidad de opciones_fijas que corresponde
+*/
+int menu_inicializar_opciones(interfaz_t* interfaz, size_t pos_menu, size_t tipo_menu){
+    if(pos_menu == 0){
+        menu_cargar_opcion(interfaz, pos_menu, OPCION_SALIR, DESCRIPCION_SALIR);
+        interfaz->menus[pos_menu].cant_opc_fijas = 1;
+        return EXITO;
+    }else{
+        if(tipo_menu == TIPO_MENU_MEDIO){
+            menu_cargar_opcion(interfaz, pos_menu, OPCION_AVANZAR, DESCRIPCION_AVANZAR);
+            menu_cargar_opcion(interfaz, pos_menu, OPCION_VOLVER, DESCRIPCION_VOLVER);
+            menu_cargar_opcion(interfaz, pos_menu, OPCION_SALIR, DESCRIPCION_SALIR);
+            interfaz->menus[pos_menu].cant_opc_fijas = 3;
+            return EXITO;
+        }else if(tipo_menu == TIPO_MENU_FINAL){
+            menu_cargar_opcion(interfaz, pos_menu, OPCION_VOLVER, DESCRIPCION_VOLVER);
+            menu_cargar_opcion(interfaz, pos_menu, OPCION_SALIR, DESCRIPCION_SALIR);
+            interfaz->menus[pos_menu].cant_opc_fijas = 2;
+            return EXITO;
+        }
+    }
+    return ERROR;
 }
 
 /****************************       FUNCIONES INTERFAZ .H       ***********************************/
@@ -494,13 +514,15 @@ void menu_cargar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion, cons
 }
 
 //interfaz.h
-int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION]){
-    if(!interfaz)
+int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], size_t tipo_menu){
+    if(!interfaz || !titulo || !tipo_menu_valido(tipo_menu))
         return ERROR;
     size_t espaciado = (interfaz->dimension.max - strlen(titulo)) / 2;
     if(strlen(titulo) > interfaz->dimension.max - espaciado)
         return ERROR;
     size_t tope = interfaz->cant_menus;
+    if(tope != 0 && tipo_menu == TIPO_MENU_INICIO)
+        return ERROR;
     menu_t* aux = realloc(interfaz->menus, (size_t) sizeof(menu_t)*(tope + 1));
     if(!aux){
         interfaz_destruir(interfaz);
@@ -510,9 +532,8 @@ int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION]){
     interfaz->cant_menus ++;
     strcpy(interfaz->menus[tope].titulo, titulo);
     interfaz->menus[tope].cant_opciones = 0;
-    menu_cargar_opcion(interfaz, tope, OPCION_SALIR, DESCRIPCION_SALIR);
-    if(tope != 0)
-        menu_cargar_opcion(interfaz, tope, OPCION_VOLVER, DESCRIPCION_VOLVER);
+    interfaz->menus[tope].cant_opc_fijas = 0;
+    menu_inicializar_opciones(interfaz, tope, tipo_menu);
     return EXITO;
 }
 
@@ -524,7 +545,7 @@ void menu_mostrar(interfaz_t* interfaz, size_t pos_menu){
     }
     system(LIMPIAR);
     menu_encabezado(interfaz, pos_menu);
-    menu_mostrar_opciones(interfaz, pos_menu);
+    menu_mostrar_opciones(interfaz, interfaz->menus[pos_menu]);
 }
 
 //interfaz.h 
@@ -545,8 +566,9 @@ int informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], fun
 
     strcpy(interfaz->infos[tope].menu.titulo, titulo);
     interfaz->infos[tope].menu.cant_opciones = 0;
-    cargar_opcion(&(interfaz->infos[tope].menu), OPCION_SALIR, DESCRIPCION_SALIR);
+    cargar_opcion(&(interfaz->infos[tope].menu), OPCION_AVANZAR, DESCRIPCION_AVANZAR_INFO);
     cargar_opcion(&(interfaz->infos[tope].menu), OPCION_VOLVER, DESCRIPCION_VOLVER);
+    interfaz->infos[tope].menu.cant_opc_fijas = 2;
     interfaz->cant_infos++;
     return EXITO;
 }
@@ -570,7 +592,7 @@ void informacion_mostrar(interfaz_t* interfaz, size_t menu_info, void* informaci
     info_encabezado(interfaz, menu_info);
     funcion_grafica_t funcion = interfaz->infos[menu_info].mostrar;
     funcion(interfaz, informacion, aux);
-    info_mostrar_opciones(interfaz, interfaz->infos[menu_info].menu);
+    menu_mostrar_opciones(interfaz, interfaz->infos[menu_info].menu);
 }
 
 //interfaz.h
@@ -588,7 +610,7 @@ void interfaz_cambiar_estado(interfaz_t* interfaz, char nuevo_estado){
 //interfaz.h
 char* pedir_string(interfaz_t* interfaz, const char* descripcion){
     imprimir_margen(interfaz->dimension.margen);
-    printf("Ingrese el" VERDE "%s" RESET "que desea : ", descripcion);
+    printf("Ingrese " VERDE "%s" RESET " que desea : ", descripcion);
     char buffer[MAX_STRING];
     char* str ;
     str = leer_linea(buffer, MAX_STRING, stdin);

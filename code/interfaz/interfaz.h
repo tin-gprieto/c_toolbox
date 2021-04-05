@@ -13,6 +13,10 @@
 #define OPCION_VOLVER 'V'
 #define OPCION_AVANZAR 'N'
 
+#define TIPO_MENU_INICIO 0
+#define TIPO_MENU_MEDIO 1
+#define TIPO_MENU_FINAL 2
+
 typedef struct dimension{
     size_t max;
     size_t margen;
@@ -78,7 +82,7 @@ char interfaz_estado(interfaz_t* interfaz);
 * Pre : Interfaz creada
 * Post: Nuevo menú en la interfaz
 */
-int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION]);
+int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], size_t tipo_menu);
 
 /* 
 * Dada una interfaz, carga una letra y su descripcion para el menú
