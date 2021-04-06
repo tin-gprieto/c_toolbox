@@ -143,13 +143,13 @@ void reportar_error(interfaz_t* interfaz, const char *descripcion);
 * Pre : Interfaz creada
 * Post: Cadena de caracteres ingresada por el usuario (hasta \n)
 */
-char* pedir_string(interfaz_t* interfaz, const char* descripcion);
+char* interfaz_pedir_string(interfaz_t* interfaz, const char* descripcion);
 
 /* 
 * Pide una ruta de archivo al usuario y devuelve como retorno 
 * Pre : Interfaz creada
 * Post: ruta válida del archivo (sin fallo de apertura)
 */
-char* pedir_archivo(interfaz_t* interfaz, const char* extension, const char* descripcion);
+char* interfaz_pedir_archivo(interfaz_t* interfaz, const char* extension, const char* descripcion);
 
 #endif /* __INTERFAZ_H__ */

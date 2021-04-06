@@ -608,7 +608,7 @@ void interfaz_cambiar_estado(interfaz_t* interfaz, char nuevo_estado){
 }
 
 //interfaz.h
-char* pedir_string(interfaz_t* interfaz, const char* descripcion){
+char* interfaz_pedir_string(interfaz_t* interfaz, const char* descripcion){
     imprimir_margen(interfaz->dimension.margen);
     printf("Ingrese " VERDE "%s" RESET " que desea : ", descripcion);
     char buffer[MAX_STRING];
@@ -618,7 +618,7 @@ char* pedir_string(interfaz_t* interfaz, const char* descripcion){
 }
 
 //interfaz.h
-char* pedir_archivo(interfaz_t* interfaz, const char* extension, const char* descripcion){
+char* interfaz_pedir_archivo(interfaz_t* interfaz, const char* extension, const char* descripcion){
     imprimir_margen(interfaz->dimension.margen);
     printf("Ingrese la ruta del archivo de " VERDE "%s" RESET ":", descripcion);
     char buffer[MAX_STRING];
