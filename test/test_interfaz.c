@@ -15,7 +15,7 @@ void funcion_mostrar(interfaz_t* interfaz, void* info, void* aux){
     for(size_t i = 0; i < tope; i++){
         char linea[200];
         sprintf(linea, "%i - %s", vector->numero[i], vector->string[i]);
-        informacion_linea((interfaz_t*)interfaz, VERDE, linea);
+        informacion_imprimir_linea((interfaz_t*)interfaz, VERDE, linea);
     }
 }
 
