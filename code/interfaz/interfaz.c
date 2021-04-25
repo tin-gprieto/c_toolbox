@@ -40,8 +40,7 @@ static const size_t LONGITUD_BARRA = 40;
 
 #define DESCRIPCION_SALIR  "Salir"
 #define DESCRIPCION_VOLVER  "Volver"
-#define DESCRIPCION_AVANZAR  "Avanzar"
-#define DESCRIPCION_AVANZAR_INFO  "Avanzar / Salir"
+#define DESCRIPCION_SALIR_INFO  "Avanzar / Salir"
 
 /******************************     GRÁFICA     ******************************************/
 
@@ -208,7 +207,7 @@ void imprimir_linea_partida(interfaz_t* interfaz, const char* color_1, const cha
 }
 
 //interfaz.h
-void reportar_error(interfaz_t* interfaz, const char *descripcion){
+void interfaz_reportar_error(interfaz_t* interfaz, const char *descripcion){
     imprimir_margen(interfaz->dimension.margen);
     printf(ROJO "%s - ERROR - %s \n" RESET, CRUZ, descripcion);
     system("sleep 2");
@@ -305,7 +304,7 @@ char pedir_clave(interfaz_t* interfaz, char* opciones, size_t cantidad){
     scanf(" %c", &clave);
     while(!clave_valida((char)clave, opciones, cantidad)){
         limpiar_buffer();
-        reportar_error(interfaz, "Opcion inválida");
+        interfaz_reportar_error(interfaz, "Opcion inválida");
         imprimir_margen(interfaz->dimension.margen);
         printf("Ingrese nuevamente una opción : ");
         scanf(" %c", &clave);
@@ -401,12 +400,19 @@ void cargar_opcion(menu_t* menu, char opcion, const char* descripcion){
 }
 
 /*
-* Evalua si el tipo de menu es un tipo válido
-* Pre : tipo de menu ingresado en menu_insertar
-* Post: Verdadero si el tipo corresponde a alguna de las constantes
+* Compara la opción pasada con las opciones que hay en el menú
+* Pre : -
+* Post: Verdadero si la opción ya se encuentra en el menú
 */
-bool tipo_menu_valido(size_t tipo_menu){
-    return tipo_menu == TIPO_MENU_INICIO || tipo_menu == TIPO_MENU_MEDIO || tipo_menu == TIPO_MENU_FINAL;
+bool opcion_existente(menu_t menu, char opcion){
+    bool existe = false;
+    int i = 0;
+    while(i < menu.cant_opciones && !existe){
+        if(menu.opciones[i] == opcion)
+            existe = true;
+        i ++;
+    }
+    return existe;
 }
 
 /*
@@ -415,24 +421,16 @@ bool tipo_menu_valido(size_t tipo_menu){
 * Post: Deja al menú en posición con sus opciones fijas cargadas 
 * y la cantidad de opciones_fijas que corresponde
 */
-int menu_inicializar_opciones(interfaz_t* interfaz, size_t pos_menu, size_t tipo_menu){
+int menu_inicializar_opciones(interfaz_t* interfaz, size_t pos_menu){
     if(pos_menu == 0){
         menu_cargar_opcion(interfaz, pos_menu, OPCION_SALIR, DESCRIPCION_SALIR);
         interfaz->menus[pos_menu].cant_opc_fijas = 1;
         return EXITO;
     }else{
-        if(tipo_menu == TIPO_MENU_MEDIO){
-            menu_cargar_opcion(interfaz, pos_menu, OPCION_AVANZAR, DESCRIPCION_AVANZAR);
-            menu_cargar_opcion(interfaz, pos_menu, OPCION_VOLVER, DESCRIPCION_VOLVER);
-            menu_cargar_opcion(interfaz, pos_menu, OPCION_SALIR, DESCRIPCION_SALIR);
-            interfaz->menus[pos_menu].cant_opc_fijas = 3;
-            return EXITO;
-        }else if(tipo_menu == TIPO_MENU_FINAL){
-            menu_cargar_opcion(interfaz, pos_menu, OPCION_VOLVER, DESCRIPCION_VOLVER);
-            menu_cargar_opcion(interfaz, pos_menu, OPCION_SALIR, DESCRIPCION_SALIR);
-            interfaz->menus[pos_menu].cant_opc_fijas = 2;
-            return EXITO;
-        }
+        menu_cargar_opcion(interfaz, pos_menu, OPCION_VOLVER, DESCRIPCION_VOLVER);
+        menu_cargar_opcion(interfaz, pos_menu, OPCION_SALIR, DESCRIPCION_SALIR);
+        interfaz->menus[pos_menu].cant_opc_fijas = 2;
+        return EXITO;
     }
     return ERROR;
 }
@@ -490,13 +488,13 @@ interfaz_t* interfaz_crear(dimension_t dimension, estetica_t estetica){
 //interfaz.h
 void menu_eliminar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion){
     if(!interfaz || pos_menu >= interfaz->cant_menus){
-        reportar_error(interfaz, "Interfaz o Menú inválidos");
+        interfaz_reportar_error(interfaz, "Interfaz o Menú inválidos");
         return;
     }
     size_t cantidad = interfaz->menus[pos_menu].cant_opciones;
     size_t pos = buscar_opcion(interfaz->menus[pos_menu].opciones,cantidad, opcion);
     if(pos == ERROR){
-        reportar_error(interfaz, "Opción a eliminar inválida");
+        interfaz_reportar_error(interfaz, "Opción a eliminar inválida");
         return;
     }
     eliminar_letra(interfaz->menus[pos_menu].opciones, pos, cantidad);
@@ -507,22 +505,24 @@ void menu_eliminar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion){
 //interfaz.h
 void menu_cargar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion, const char* descripcion){
     if (!interfaz || pos_menu >= interfaz->cant_menus){
-        reportar_error(interfaz, "Interfaz o Menú inválidos");
+        interfaz_reportar_error(interfaz, "Interfaz o Menú inválidos");
+        return;
+    }
+    if(opcion_existente(interfaz->menus[pos_menu], opcion)){
+        interfaz_reportar_error(interfaz, "Opción inválida (previamente añadida)");
         return;
     }
     cargar_opcion(&(interfaz->menus[pos_menu]), opcion, descripcion);
 }
 
 //interfaz.h
-int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], size_t tipo_menu){
-    if(!interfaz || !titulo || !tipo_menu_valido(tipo_menu))
+int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION]){
+    if(!interfaz || !titulo)
         return ERROR;
     size_t espaciado = (interfaz->dimension.max - strlen(titulo)) / 2;
     if(strlen(titulo) > interfaz->dimension.max - espaciado)
         return ERROR;
     size_t tope = interfaz->cant_menus;
-    if(tope != 0 && tipo_menu == TIPO_MENU_INICIO)
-        return ERROR;
     menu_t* aux = realloc(interfaz->menus, (size_t) sizeof(menu_t)*(tope + 1));
     if(!aux){
         interfaz_destruir(interfaz);
@@ -533,14 +533,14 @@ int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], size_t tip
     strcpy(interfaz->menus[tope].titulo, titulo);
     interfaz->menus[tope].cant_opciones = 0;
     interfaz->menus[tope].cant_opc_fijas = 0;
-    menu_inicializar_opciones(interfaz, tope, tipo_menu);
+    menu_inicializar_opciones(interfaz, tope);
     return EXITO;
 }
 
 //interfaz.h
 void menu_mostrar(interfaz_t* interfaz, size_t pos_menu){
     if(!interfaz || pos_menu >= interfaz->cant_menus){
-        reportar_error(interfaz, "Interfaz o Menú inválidos");
+        interfaz_reportar_error(interfaz, "Interfaz o Menú inválidos");
         return;
     }
     system(LIMPIAR);
@@ -566,33 +566,33 @@ int informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], fun
 
     strcpy(interfaz->infos[tope].menu.titulo, titulo);
     interfaz->infos[tope].menu.cant_opciones = 0;
-    cargar_opcion(&(interfaz->infos[tope].menu), OPCION_AVANZAR, DESCRIPCION_AVANZAR_INFO);
     cargar_opcion(&(interfaz->infos[tope].menu), OPCION_VOLVER, DESCRIPCION_VOLVER);
+    cargar_opcion(&(interfaz->infos[tope].menu), OPCION_SALIR, DESCRIPCION_SALIR_INFO);
     interfaz->infos[tope].menu.cant_opc_fijas = 2;
     interfaz->cant_infos++;
     return EXITO;
 }
 
 //interfaz.h 
-void informacion_linea(interfaz_t* interfaz, const char* color, const char* linea){
+void informacion_imprimir_linea(interfaz_t* interfaz, const char* color, const char* linea){
     if (!interfaz){
-        reportar_error(interfaz, "Interfaz inválida");
+        interfaz_reportar_error(interfaz, "Interfaz inválida");
         return;
     }
     imprimir_linea(interfaz, interfaz->dimension.espaciado, color, linea);
 }
 
 //interfaz.h 
-void informacion_mostrar(interfaz_t* interfaz, size_t menu_info, void* informacion, void* aux){
-    if(!interfaz || menu_info >= interfaz->cant_infos){
-        reportar_error(interfaz, "Interfaz o Menú inválidos");
+void informacion_mostrar(interfaz_t* interfaz, size_t pos_menu, void* informacion, void* aux){
+    if(!interfaz || pos_menu >= interfaz->cant_infos){
+        interfaz_reportar_error(interfaz, "Interfaz o Menú inválidos");
         return;
     }
     system(LIMPIAR);
-    info_encabezado(interfaz, menu_info);
-    funcion_grafica_t funcion = interfaz->infos[menu_info].mostrar;
+    info_encabezado(interfaz, pos_menu);
+    funcion_grafica_t funcion = interfaz->infos[pos_menu].mostrar;
     funcion(interfaz, informacion, aux);
-    menu_mostrar_opciones(interfaz, interfaz->infos[menu_info].menu);
+    menu_mostrar_opciones(interfaz, interfaz->infos[pos_menu].menu);
 }
 
 //interfaz.h
@@ -625,7 +625,7 @@ char* interfaz_pedir_archivo(interfaz_t* interfaz, const char* extension, const 
     char* ruta_archivo;
     ruta_archivo = leer_linea(buffer, MAX_STRING, stdin);
     while(!ruta_archivo_valida(ruta_archivo, extension)){
-        reportar_error(interfaz, "Hubo un problema con la ruta ingresada");
+        interfaz_reportar_error(interfaz, "Hubo un problema con la ruta ingresada");
         imprimir_margen(interfaz->dimension.margen);
         printf("Ingrese nuevamente : ");
         ruta_archivo = leer_linea(buffer, MAX_STRING, stdin);

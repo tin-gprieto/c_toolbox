@@ -13,10 +13,6 @@
 #define OPCION_VOLVER 'V'
 #define OPCION_AVANZAR 'N'
 
-#define TIPO_MENU_INICIO 0
-#define TIPO_MENU_MEDIO 1
-#define TIPO_MENU_FINAL 2
-
 typedef struct dimension{
     size_t max;
     size_t margen;
@@ -34,7 +30,7 @@ typedef struct interfaz interfaz_t;
 /*
 * Función para menú información: Recibe la interfaz,
 * un puntero a la información que se desae mostrar, y un puntero a un auxiliar.
-* Se complementa con informacion_linea para implementarla,
+* Se complementa con informacion_imprimir_linea para implementarla,
 * y se ejecuta con mostrar_informacion.
 */
 typedef void (*funcion_grafica_t)(interfaz_t*, void*, void*);
@@ -82,7 +78,7 @@ char interfaz_estado(interfaz_t* interfaz);
 * Pre : Interfaz creada
 * Post: Nuevo menú en la interfaz
 */
-int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], size_t tipo_menu);
+int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION]);
 
 /* 
 * Dada una interfaz, carga una letra y su descripcion para el menú
@@ -120,7 +116,7 @@ int informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], fun
 * Pre : Interfaz creada y color válido
 * Post: Información por pantalla dentro de la interfaz
 */
-void informacion_linea(interfaz_t* interfaz,  const char* color, const char* linea);
+void informacion_imprimir_linea(interfaz_t* interfaz,  const char* color, const char* linea);
 
 /*
 * Dada una información y un auxiliar, muestra la información con el menú que corresponde:
@@ -128,7 +124,7 @@ void informacion_linea(interfaz_t* interfaz,  const char* color, const char* lin
 * pasados que correspondan con los tipos de datos que maneja la función grafica de dicho menu.
 * Post: Información con el menú impreso por la pantalla y pide opción para avanzar (VOLVER o SALIR)
 */
-void informacion_mostrar(interfaz_t* interfaz, size_t menu_info, void* informacion, void* aux);
+void informacion_mostrar(interfaz_t* interfaz, size_t pos_menu, void* informacion, void* aux);
 
 /*
 * Dado un string constante, imprime por pantalla su mensaje de forma tal que
@@ -136,7 +132,7 @@ void informacion_mostrar(interfaz_t* interfaz, size_t menu_info, void* informaci
 * Pre : Descripcion completa del problema
 * Post: Información por pantalla
 */
-void reportar_error(interfaz_t* interfaz, const char *descripcion);
+void interfaz_reportar_error(interfaz_t* interfaz, const char *descripcion);
 
 /* 
 * Dada una descripcion, pide al usuario una cadena de caracteres
