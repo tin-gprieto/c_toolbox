@@ -64,7 +64,7 @@ Además de las opciones personalizadas, hay ciertas **opciones por defecto**, qu
 ![](/screenshots/Menu_Inicio.png?raw=true)
 
 #### Menú de opciones Desarrollo
-![](/screenshots/Menu_Desarollo.png?raw=true)
+![](/screenshots/Menu_Desarrollo.png?raw=true)
 
 ### 3.Menú información
 
