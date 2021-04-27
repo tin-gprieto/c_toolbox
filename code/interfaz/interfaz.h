@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "../tools/tools.h"
 
 #define MAX_DESCRIPCION 80
 #define MAX_COLOR 8

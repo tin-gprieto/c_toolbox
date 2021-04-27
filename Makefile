@@ -13,8 +13,8 @@ test/tools.exe:	$(TOOLS)
 tools: test/tools.exe $(TOOLS)
 	$(V) $(VFLAGS) ./test/tools.exe
 
-test/interfaz.exe: $(INTERFAZ) $(TOOLS)
-	$(CC) test/test_interfaz.c $(INTERFAZ) $(TOOLS) $(CFLAGS) $(WFLAGS) -o test/interfaz.exe
+test/interfaz.exe: $(INTERFAZ)
+	$(CC) test/test_interfaz.c $(INTERFAZ) $(CFLAGS) $(WFLAGS) -o test/interfaz.exe
 
 interfaz: test/interfaz.exe $(INTERFAZ)
 	$(V) $(VFLAGS) ./test/interfaz.exe

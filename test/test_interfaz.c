@@ -1,5 +1,4 @@
 #include "../code/interfaz/interfaz.h"
-#include "../code/tools/tools.h"
 
 #define MAX_STRING 50
 

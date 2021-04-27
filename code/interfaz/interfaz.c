@@ -1,5 +1,4 @@
 #include "interfaz.h"
-#include "../tools/tools.h"
 
 #define MAX_STRING 100
 #define MAX_OPCIONES 10
@@ -40,7 +39,6 @@ static const size_t LONGITUD_BARRA = 40;
 
 #define DESCRIPCION_SALIR  "Salir"
 #define DESCRIPCION_VOLVER  "Volver"
-#define DESCRIPCION_SALIR_INFO  "Avanzar / Salir"
 
 /******************************     GRÁFICA     ******************************************/
 
@@ -405,6 +403,8 @@ void cargar_opcion(menu_t* menu, char opcion, const char* descripcion){
 * Post: Verdadero si la opción ya se encuentra en el menú
 */
 bool opcion_existente(menu_t menu, char opcion){
+    if(opcion == OPCION_SALIR || opcion == OPCION_VOLVER)
+        return true;
     bool existe = false;
     int i = 0;
     while(i < menu.cant_opciones && !existe){
@@ -423,12 +423,12 @@ bool opcion_existente(menu_t menu, char opcion){
 */
 int menu_inicializar_opciones(interfaz_t* interfaz, size_t pos_menu){
     if(pos_menu == 0){
-        menu_cargar_opcion(interfaz, pos_menu, OPCION_SALIR, DESCRIPCION_SALIR);
+        cargar_opcion(&(interfaz->menus[pos_menu]), OPCION_SALIR, DESCRIPCION_SALIR);
         interfaz->menus[pos_menu].cant_opc_fijas = 1;
         return EXITO;
     }else{
-        menu_cargar_opcion(interfaz, pos_menu, OPCION_VOLVER, DESCRIPCION_VOLVER);
-        menu_cargar_opcion(interfaz, pos_menu, OPCION_SALIR, DESCRIPCION_SALIR);
+        cargar_opcion(&(interfaz->menus[pos_menu]), OPCION_VOLVER, DESCRIPCION_VOLVER);
+        cargar_opcion(&(interfaz->menus[pos_menu]), OPCION_SALIR, DESCRIPCION_SALIR);
         interfaz->menus[pos_menu].cant_opc_fijas = 2;
         return EXITO;
     }
@@ -567,7 +567,7 @@ int informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], fun
     strcpy(interfaz->infos[tope].menu.titulo, titulo);
     interfaz->infos[tope].menu.cant_opciones = 0;
     cargar_opcion(&(interfaz->infos[tope].menu), OPCION_VOLVER, DESCRIPCION_VOLVER);
-    cargar_opcion(&(interfaz->infos[tope].menu), OPCION_SALIR, DESCRIPCION_SALIR_INFO);
+    cargar_opcion(&(interfaz->infos[tope].menu), OPCION_SALIR, DESCRIPCION_SALIR);
     interfaz->infos[tope].menu.cant_opc_fijas = 2;
     interfaz->cant_infos++;
     return EXITO;
