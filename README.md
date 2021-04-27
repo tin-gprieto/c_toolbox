@@ -110,7 +110,7 @@ Estas funciones adicionales consisten en interacciones con el usuario dentro del
 
 ### 5.Glosario de constantes
 
-#### Colores
+#### Colores (Secuencia de escape ANSI)
 (Incluidas en tools.c)
 
     NEGRO            "\e[0;30m"
