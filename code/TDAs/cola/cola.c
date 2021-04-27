@@ -1,5 +1,7 @@
 #include "cola.h"
 
+#define ERROR -1
+
 /*
 *Devuelve el puntero al nodo que se encuentre en la posicion 
 *pasada por parametro
