@@ -132,7 +132,7 @@ Estas funciones adicionales consisten en interacciones con el usuario dentro del
     FONDO_CYAN       "\e[1;46m"
     FONDO_BLANCO     "\e[107m"
 
-#### Opciones por defecto
+#### Opciones por defecto en interfaz
 
     OPCION_SALIR 'S'
     OPCION_VOLVER 'V'
