@@ -8,6 +8,10 @@ typedef struct estructura{
     size_t cantidad;
 }estructura_t;
 
+void funcion_mostrar_linea(interfaz_t* interfaz, void* nada, void* aux_nada){
+    informacion_imprimir_linea(interfaz, BLANCO, "Informacion linea");
+}
+
 void funcion_mostrar(interfaz_t* interfaz, void* info, void* aux){
     estructura_t* vector = (estructura_t*) info;
     size_t tope = vector->cantidad;
@@ -46,27 +50,28 @@ int main(){
     if(!interfaz){
         warning("la creación del interfaz");
     }
-    if(menu_insertar(interfaz, "Menu inicio") == ERROR){
-        interfaz_destruir(interfaz);
-        return ERROR;
-    }
-    if(menu_insertar(interfaz, "Menu desarrollo") == ERROR){
-        interfaz_destruir(interfaz);
-        return ERROR;
-    }
+    
+    menu_insertar(interfaz, "Menu inicio");
+    menu_insertar(interfaz, "Menu desarrollo");
+    informacion_insertar(interfaz, "Informacion varia", funcion_mostrar);
+    informacion_insertar(interfaz, "Informacion linea", funcion_mostrar_linea);
     
     inicializar_menu(interfaz);
+    estructura_t estructura;
+    inicializar_informacion(&estructura);
     
     menu_mostrar(interfaz, 0);
     menu_mostrar(interfaz, 1);
-    
-    estructura_t estructura;
-
-    inicializar_informacion(&estructura);
-
-    informacion_insertar(interfaz, "Informacion", funcion_mostrar);
     informacion_mostrar(interfaz, 0, &estructura, NULL);
+    informacion_mostrar(interfaz, 1, NULL, NULL);
 
+    int numero = atoi(interfaz_pedir_string(interfaz, "un numero"));
+    printf("Número ingresado: %i \n", numero);
+    char* str = interfaz_pedir_string(interfaz, "un string");
+    printf("String ingresado: %s \n", str);
+    char* ruta = interfaz_pedir_archivo(interfaz, "txt","una ruta de archivo");
+    printf("Ruta ingresada: %s \n", ruta);
+    
     interfaz_destruir(interfaz);
     return 0;
 }
