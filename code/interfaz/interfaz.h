@@ -11,7 +11,7 @@
 #define MAX_COLOR 8
 
 #define OPCION_SALIR 'S'
-#define OPCION_VOLVER 'V'
+#define OPCION_VOLVER 'B'
 #define OPCION_AVANZAR 'N'
 
 typedef struct dimension{
@@ -123,7 +123,7 @@ void informacion_imprimir_linea(interfaz_t* interfaz,  const char* color, const 
 * Dada una información y un auxiliar, muestra la información con el menú que corresponde:
 * Pre : Interfaz creada, pos_info menor a la cantidad de menu_info, información y aux (puede ser NULL) 
 * pasados que correspondan con los tipos de datos que maneja la función grafica de dicho menu.
-* Post: Información con el menú impreso por la pantalla y pide opción para avanzar (VOLVER o SALIR)
+* Post: Información con el menú impreso por la pantalla y pide opción para avanzar (AVANZAR)
 */
 void informacion_mostrar(interfaz_t* interfaz, size_t pos_menu, void* informacion, void* aux);
 

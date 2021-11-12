@@ -39,6 +39,7 @@ static const size_t LONGITUD_BARRA = 40;
 
 #define DESCRIPCION_SALIR  "Salir"
 #define DESCRIPCION_VOLVER  "Volver"
+#define DESCRIPCION_AVANZAR  "Avanzar"
 
 /******************************     GRÁFICA     ******************************************/
 
@@ -566,9 +567,8 @@ int informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], fun
 
     strcpy(interfaz->infos[tope].menu.titulo, titulo);
     interfaz->infos[tope].menu.cant_opciones = 0;
-    cargar_opcion(&(interfaz->infos[tope].menu), OPCION_VOLVER, DESCRIPCION_VOLVER);
-    cargar_opcion(&(interfaz->infos[tope].menu), OPCION_SALIR, DESCRIPCION_SALIR);
-    interfaz->infos[tope].menu.cant_opc_fijas = 2;
+    cargar_opcion(&(interfaz->infos[tope].menu), OPCION_AVANZAR, DESCRIPCION_AVANZAR);
+    interfaz->infos[tope].menu.cant_opc_fijas = 1;
     interfaz->cant_infos++;
     return EXITO;
 }

@@ -135,4 +135,5 @@ Estas funciones adicionales consisten en interacciones con el usuario dentro del
 #### Opciones por defecto en interfaz
 
     OPCION_SALIR 'S'
-    OPCION_VOLVER 'V'
+    OPCION_VOLVER 'B'
+    OPCION_AVANZAR 'N'
