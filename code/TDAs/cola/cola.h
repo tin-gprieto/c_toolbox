@@ -5,14 +5,14 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-typedef struct nodo{
+typedef struct nodo_cola{
     void* elemento;
-    struct nodo* siguiente;
-}nodo_t;
+    struct nodo_cola* siguiente;
+}nodo_cola_t;
 
 typedef struct cola{
-    nodo_t* nodo_inicio;
-    nodo_t* nodo_fin;
+    nodo_cola_t* nodo_inicio;
+    nodo_cola_t* nodo_fin;
     size_t cantidad;
 }cola_t;
 

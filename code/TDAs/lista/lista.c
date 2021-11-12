@@ -12,12 +12,12 @@
 * Pre: Posicion que esté dentro de la lista
 * Post: Elemento en posicion o NULL si no lo encuentra
 */
-nodo_t* nodo_en_posicion(nodo_t* nodo, size_t contador, size_t posicion){
+nodo_lista_t* lista_nodo_en_posicion(nodo_lista_t* nodo, size_t contador, size_t posicion){
     if(!nodo)
         return NULL;
     if(contador == posicion)
         return nodo;
-    return nodo_en_posicion(nodo->siguiente, contador + 1, posicion);
+    return lista_nodo_en_posicion(nodo->siguiente, contador + 1, posicion);
 }
 
 /*
@@ -25,7 +25,7 @@ nodo_t* nodo_en_posicion(nodo_t* nodo, size_t contador, size_t posicion){
 * Pre: nuevo_nodo y lista creados
 * Post: nuevo_nodo es el nuevo nodo_inicio y su siguiente es el nodo_inicio anterior
 */
-void anclar_al_inicio(lista_t* lista, nodo_t* nuevo_nodo){
+void lista_anclar_al_inicio(lista_t* lista, nodo_lista_t* nuevo_nodo){
     if(lista && nuevo_nodo){
         nuevo_nodo->siguiente = lista->nodo_inicio;
         lista->nodo_inicio = nuevo_nodo;
@@ -37,7 +37,7 @@ void anclar_al_inicio(lista_t* lista, nodo_t* nuevo_nodo){
 * Pre: nuevo_nodo creado
 * Post: nodo_final y anterior nodo_final apuntando al nuevo_nodo
 */
-void anclar_al_final(lista_t* lista, nodo_t* nuevo_nodo){
+void lista_anclar_al_final(lista_t* lista, nodo_lista_t* nuevo_nodo){
     if (lista && nuevo_nodo){
         (lista->nodo_fin)->siguiente = nuevo_nodo;
         lista->nodo_fin = nuevo_nodo;
@@ -50,18 +50,18 @@ el lugar del que lo ocupaba anteriormente
 * Pre: lista creada y la posicion no puede ser ni la primera ni la última
 * Post: Elemento en posicion y entre dos nodos de la lista
 */
-int crear_e_insertar_entre_nodos(lista_t * lista, void* elemento, size_t posicion){
+int lista_crear_e_insertar_entre_nodos(lista_t * lista, void* elemento, size_t posicion){
     if(!lista) 
         return ERROR;
     if((posicion == 0)||(posicion == lista->cantidad))
         return ERROR;
-    nodo_t *nuevo_nodo = malloc(sizeof(nodo_t));
+    nodo_lista_t *nuevo_nodo = malloc(sizeof(nodo_lista_t));
     if (!nuevo_nodo)
         return ERROR;
     nuevo_nodo->elemento = elemento;
 
-    nodo_t *antecesor = nodo_en_posicion(lista->nodo_inicio, 0, (posicion-1));
-    nodo_t *reemplazado = antecesor->siguiente;
+    nodo_lista_t *antecesor = lista_nodo_en_posicion(lista->nodo_inicio, 0, (posicion-1));
+    nodo_lista_t *reemplazado = antecesor->siguiente;
     antecesor->siguiente = nuevo_nodo;
     nuevo_nodo->siguiente = reemplazado;
 
@@ -74,14 +74,14 @@ int crear_e_insertar_entre_nodos(lista_t * lista, void* elemento, size_t posicio
 * Post: Elemento insertado al inicio de la lista, en el caso de
 *ser el primer elemento insertado también es el último.
 */
-int crear_e_insertar_al_inicio(lista_t* lista, void* elemento){
+int lista_crear_e_insertar_al_inicio(lista_t* lista, void* elemento){
     if(!lista)
         return ERROR;
-    nodo_t *nuevo_nodo = malloc(sizeof(nodo_t));
+    nodo_lista_t *nuevo_nodo = malloc(sizeof(nodo_lista_t));
     if (!nuevo_nodo)
         return ERROR;
     nuevo_nodo->elemento = elemento;
-    anclar_al_inicio(lista, nuevo_nodo);
+    lista_anclar_al_inicio(lista, nuevo_nodo);
     if(lista->cantidad == 0)
         lista->nodo_fin = nuevo_nodo;
     lista->cantidad++;
@@ -94,15 +94,15 @@ int crear_e_insertar_al_inicio(lista_t* lista, void* elemento){
 * Pre: Lista creada
 * Post: Elemento insertado al final de la lista
 */
-int crear_e_insertar_al_final(lista_t* lista, void* elemento){
+int lista_crear_e_insertar_al_final(lista_t* lista, void* elemento){
     if (!lista)
         return ERROR;
-    nodo_t *nuevo_nodo = malloc(sizeof(nodo_t));
+    nodo_lista_t *nuevo_nodo = malloc(sizeof(nodo_lista_t));
     if (!nuevo_nodo)
         return ERROR;
     nuevo_nodo->elemento = elemento;
     nuevo_nodo->siguiente = NULL;
-    anclar_al_final(lista, nuevo_nodo);
+    lista_anclar_al_final(lista, nuevo_nodo);
     lista->cantidad++;
     return 0;    
 }
@@ -112,11 +112,11 @@ int crear_e_insertar_al_final(lista_t* lista, void* elemento){
 * Pre: Lista creada y posicion de un elemento que pertenezca
 * Post: Elemento en posicion borrado y lugar ocupado por el siguiente
 */
-void borrar_en_posicion(lista_t* lista, size_t posicion){
+void lista_borrar_en_posicion(lista_t* lista, size_t posicion){
     if ((!lista) || (posicion == 0))
         return;
-    nodo_t *antecesor = nodo_en_posicion(lista->nodo_inicio, 0, posicion - 1);
-    nodo_t *borrado = antecesor->siguiente;
+    nodo_lista_t *antecesor = lista_nodo_en_posicion(lista->nodo_inicio, 0, posicion - 1);
+    nodo_lista_t *borrado = antecesor->siguiente;
     antecesor->siguiente = borrado->siguiente;
     free(borrado);
     lista->cantidad--;
@@ -127,11 +127,11 @@ void borrar_en_posicion(lista_t* lista, size_t posicion){
 * Pre: Lista/Pila creada y con más de un elemento
 * Post: Borra el ultimo elemento y deja como tope o nodo_fin a su antecesor
 */
-void borrar_ultimo_elemento(lista_t* lista){
+void lista_borrar_ultimo_elemento(lista_t* lista){
     if (!lista)
         return;
     size_t ultima_posicion= lista->cantidad - 1;
-    nodo_t *antecesor = nodo_en_posicion(lista->nodo_inicio, 0, ultima_posicion - 1);
+    nodo_lista_t *antecesor = lista_nodo_en_posicion(lista->nodo_inicio, 0, ultima_posicion - 1);
     free(antecesor->siguiente);
     antecesor->siguiente = NULL;
     lista->nodo_fin = antecesor;
@@ -143,10 +143,10 @@ void borrar_ultimo_elemento(lista_t* lista){
 * Pre: Lista/Pila creada y con un elemento o Cola creada 
 * Post: Primer elemento borrado y su siguiente como nuevo primer elemento
 */
-void borrar_primer_elemento(lista_t* lista){
+void lista_borrar_primer_elemento(lista_t* lista){
     if ((!lista) || (lista->cantidad == 0))
         return;
-    nodo_t *aux;
+    nodo_lista_t *aux;
     aux = (lista->nodo_inicio)->siguiente;
     free(lista->nodo_inicio);
     lista->nodo_inicio = aux;
@@ -165,9 +165,9 @@ int lista_borrar_al_final(lista_t * lista){
     if ((!lista) || (lista->cantidad == 0))
         return ERROR;
     if (lista->cantidad == 1){
-        borrar_primer_elemento(lista);
+        lista_borrar_primer_elemento(lista);
     }else{
-        borrar_ultimo_elemento(lista);
+        lista_borrar_ultimo_elemento(lista);
     }
     return 0;
 }
@@ -179,12 +179,12 @@ o no se termine la lista enlazada
 * Post: cantidad de elementos recorridos y funcion ejecutada 
 *con cada elemento hasta que corte
 */
-size_t mover_por_nodos(nodo_t *nodo, bool (*funcion)(void *, void *), void *contexto){
+size_t lista_mover_por_nodos(nodo_lista_t *nodo, bool (*funcion)(void *, void *), void *contexto){
     if (!nodo)
         return 0;
     if (!funcion(nodo->elemento, contexto))
         return 0;
-    return 1 + mover_por_nodos(nodo->siguiente, funcion, contexto);
+    return 1 + lista_mover_por_nodos(nodo->siguiente, funcion, contexto);
 }
 
 /*
@@ -192,10 +192,10 @@ size_t mover_por_nodos(nodo_t *nodo, bool (*funcion)(void *, void *), void *cont
 * Pre: nodo_inicio perteneciente a la lista para destruir
 * Post: Todos los nodo liberados de la memoria dinamica
 */
-void nodo_destruir(nodo_t* nodo){
+void lista_nodo_destruir(nodo_lista_t* nodo){
     if(!nodo) 
         return;
-    nodo_destruir(nodo->siguiente);
+    lista_nodo_destruir(nodo->siguiente);
     free(nodo);
 }
 
@@ -215,18 +215,18 @@ int lista_insertar(lista_t* lista, void* elemento){
     if(!lista) 
         return ERROR;
     if (lista->cantidad == 0)
-        return crear_e_insertar_al_inicio(&(*lista), elemento);
-    return crear_e_insertar_al_final(&(*lista), elemento);
+        return lista_crear_e_insertar_al_inicio(&(*lista), elemento);
+    return lista_crear_e_insertar_al_final(&(*lista), elemento);
 }
 
 int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
     if (!lista)
         return ERROR;
     if ((posicion == 0) || (lista->cantidad == 0))
-        return crear_e_insertar_al_inicio(lista, elemento);
+        return lista_crear_e_insertar_al_inicio(lista, elemento);
     if (lista->cantidad <= posicion)
-        return crear_e_insertar_al_final(lista, elemento);
-    return crear_e_insertar_entre_nodos(lista, elemento, posicion);
+        return lista_crear_e_insertar_al_final(lista, elemento);
+    return lista_crear_e_insertar_entre_nodos(lista, elemento, posicion);
 }
 
 int lista_borrar(lista_t* lista){
@@ -237,11 +237,11 @@ int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
     if((!lista) || (lista->cantidad == 0))
         return ERROR;
     if (posicion == 0){
-        borrar_primer_elemento(lista);
+        lista_borrar_primer_elemento(lista);
     }else  if(lista->cantidad - 1 <= posicion){
-        borrar_ultimo_elemento(lista);
+        lista_borrar_ultimo_elemento(lista);
     }else{
-        borrar_en_posicion(lista, posicion);
+        lista_borrar_en_posicion(lista, posicion);
     }
     return 0;
 }
@@ -249,7 +249,7 @@ int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
 void* lista_elemento_en_posicion(lista_t* lista, size_t posicion){
     if((!lista) || lista->cantidad <= posicion) 
         return NULL;
-    nodo_t* nodo_buscado = nodo_en_posicion(lista->nodo_inicio, 0, posicion);     
+    nodo_lista_t* nodo_buscado = lista_nodo_en_posicion(lista->nodo_inicio, 0, posicion);     
     return nodo_buscado->elemento;
 }
 
@@ -273,7 +273,7 @@ void lista_destruir(lista_t* lista){
     if (!lista)
         return;
     if(lista->cantidad != 0)
-        nodo_destruir(lista->nodo_inicio);
+        lista_nodo_destruir(lista->nodo_inicio);
     free(lista);
 }
 
@@ -317,5 +317,5 @@ void lista_iterador_destruir(lista_iterador_t* iterador){
 size_t lista_con_cada_elemento(lista_t* lista, bool (*funcion)(void*, void*), void *contexto){
     if(!lista || !funcion)
         return 0;
-    return mover_por_nodos(lista->nodo_inicio, funcion, contexto);
+    return lista_mover_por_nodos(lista->nodo_inicio, funcion, contexto);
 }

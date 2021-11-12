@@ -5,14 +5,14 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-typedef struct nodo{
+typedef struct nodo_pila{
     void* elemento;
-    struct nodo* siguiente;
-}nodo_t;
+    struct nodo_pila* siguiente;
+}nodo_pila_t;
 
 typedef struct pila{
-    nodo_t* nodo_inicio;
-    nodo_t* nodo_fin;
+    nodo_pila_t* nodo_inicio;
+    nodo_pila_t* nodo_fin;
     size_t cantidad;
 }pila_t;
 

@@ -8,12 +8,12 @@
 * Pre: Posicion que esté dentro de la cola
 * Post: Elemento en posicion o NULL si no lo encuentra
 */
-nodo_t* nodo_en_posicion(nodo_t* nodo, size_t contador, size_t posicion){
+nodo_cola_t* cola_nodo_en_posicion(nodo_cola_t* nodo, size_t contador, size_t posicion){
     if(!nodo)
         return NULL;
     if(contador == posicion)
         return nodo;
-    return nodo_en_posicion(nodo->siguiente, contador + 1, posicion);
+    return cola_nodo_en_posicion(nodo->siguiente, contador + 1, posicion);
 }
 
 /*
@@ -21,7 +21,7 @@ nodo_t* nodo_en_posicion(nodo_t* nodo, size_t contador, size_t posicion){
 * Pre: nuevo_nodo y cola creados
 * Post: nuevo_nodo es el nuevo nodo_inicio y su siguiente es el nodo_inicio anterior
 */
-void anclar_al_inicio(cola_t* cola, nodo_t* nuevo_nodo){
+void cola_anclar_al_inicio(cola_t* cola, nodo_cola_t* nuevo_nodo){
     if(cola && nuevo_nodo){
         nuevo_nodo->siguiente = cola->nodo_inicio;
         cola->nodo_inicio = nuevo_nodo;
@@ -33,7 +33,7 @@ void anclar_al_inicio(cola_t* cola, nodo_t* nuevo_nodo){
 * Pre: nuevo_nodo creado
 * Post: nodo_final y anterior nodo_final apuntando al nuevo_nodo
 */
-void anclar_al_final(cola_t* cola, nodo_t* nuevo_nodo){
+void cola_anclar_al_final(cola_t* cola, nodo_cola_t* nuevo_nodo){
     if (cola && nuevo_nodo){
         (cola->nodo_fin)->siguiente = nuevo_nodo;
         cola->nodo_fin = nuevo_nodo;
@@ -46,18 +46,18 @@ el lugar del que lo ocupaba anteriormente
 * Pre: cola creada y la posicion no puede ser ni la primera ni la última
 * Post: Elemento en posicion y entre dos nodos de la cola
 */
-int crear_e_insertar_entre_nodos(cola_t * cola, void* elemento, size_t posicion){
+int cola_crear_e_insertar_entre_nodos(cola_t * cola, void* elemento, size_t posicion){
     if(!cola) 
         return ERROR;
     if((posicion == 0)||(posicion == cola->cantidad))
         return ERROR;
-    nodo_t *nuevo_nodo = malloc(sizeof(nodo_t));
+    nodo_cola_t *nuevo_nodo = malloc(sizeof(nodo_cola_t));
     if (!nuevo_nodo)
         return ERROR;
     nuevo_nodo->elemento = elemento;
 
-    nodo_t *antecesor = nodo_en_posicion(cola->nodo_inicio, 0, (posicion-1));
-    nodo_t *reemplazado = antecesor->siguiente;
+    nodo_cola_t *antecesor = cola_nodo_en_posicion(cola->nodo_inicio, 0, (posicion-1));
+    nodo_cola_t *reemplazado = antecesor->siguiente;
     antecesor->siguiente = nuevo_nodo;
     nuevo_nodo->siguiente = reemplazado;
 
@@ -70,14 +70,14 @@ int crear_e_insertar_entre_nodos(cola_t * cola, void* elemento, size_t posicion)
 * Post: Elemento insertado al inicio de la cola, en el caso de
 *ser el primer elemento insertado también es el último.
 */
-int crear_e_insertar_al_inicio(cola_t* cola, void* elemento){
+int cola_crear_e_insertar_al_inicio(cola_t* cola, void* elemento){
     if(!cola)
         return ERROR;
-    nodo_t *nuevo_nodo = malloc(sizeof(nodo_t));
+    nodo_cola_t *nuevo_nodo = malloc(sizeof(nodo_cola_t));
     if (!nuevo_nodo)
         return ERROR;
     nuevo_nodo->elemento = elemento;
-    anclar_al_inicio(cola, nuevo_nodo);
+    cola_anclar_al_inicio(cola, nuevo_nodo);
     if(cola->cantidad == 0)
         cola->nodo_fin = nuevo_nodo;
     cola->cantidad++;
@@ -90,15 +90,15 @@ int crear_e_insertar_al_inicio(cola_t* cola, void* elemento){
 * Pre: cola creada
 * Post: Elemento insertado al final de la cola
 */
-int crear_e_insertar_al_final(cola_t* cola, void* elemento){
+int cola_crear_e_insertar_al_final(cola_t* cola, void* elemento){
     if (!cola)
         return ERROR;
-    nodo_t *nuevo_nodo = malloc(sizeof(nodo_t));
+    nodo_cola_t *nuevo_nodo = malloc(sizeof(nodo_cola_t));
     if (!nuevo_nodo)
         return ERROR;
     nuevo_nodo->elemento = elemento;
     nuevo_nodo->siguiente = NULL;
-    anclar_al_final(cola, nuevo_nodo);
+    cola_anclar_al_final(cola, nuevo_nodo);
     cola->cantidad++;
     return 0;    
 }
@@ -108,11 +108,11 @@ int crear_e_insertar_al_final(cola_t* cola, void* elemento){
 * Pre: cola creada y posicion de un elemento que pertenezca
 * Post: Elemento en posicion borrado y lugar ocupado por el siguiente
 */
-void borrar_en_posicion(cola_t* cola, size_t posicion){
+void cola_borrar_en_posicion(cola_t* cola, size_t posicion){
     if ((!cola) || (posicion == 0))
         return;
-    nodo_t *antecesor = nodo_en_posicion(cola->nodo_inicio, 0, posicion - 1);
-    nodo_t *borrado = antecesor->siguiente;
+    nodo_cola_t *antecesor = cola_nodo_en_posicion(cola->nodo_inicio, 0, posicion - 1);
+    nodo_cola_t *borrado = antecesor->siguiente;
     antecesor->siguiente = borrado->siguiente;
     free(borrado);
     cola->cantidad--;
@@ -123,11 +123,11 @@ void borrar_en_posicion(cola_t* cola, size_t posicion){
 * Pre: cola/Pila creada y con más de un elemento
 * Post: Borra el ultimo elemento y deja como tope o nodo_fin a su antecesor
 */
-void borrar_ultimo_elemento(cola_t* cola){
+void cola_borrar_ultimo_elemento(cola_t* cola){
     if (!cola)
         return;
     size_t ultima_posicion= cola->cantidad - 1;
-    nodo_t *antecesor = nodo_en_posicion(cola->nodo_inicio, 0, ultima_posicion - 1);
+    nodo_cola_t *antecesor = cola_nodo_en_posicion(cola->nodo_inicio, 0, ultima_posicion - 1);
     free(antecesor->siguiente);
     antecesor->siguiente = NULL;
     cola->nodo_fin = antecesor;
@@ -139,10 +139,10 @@ void borrar_ultimo_elemento(cola_t* cola){
 * Pre: cola/Pila creada y con un elemento o Cola creada 
 * Post: Primer elemento borrado y su siguiente como nuevo primer elemento
 */
-void borrar_primer_elemento(cola_t* cola){
+void cola_borrar_primer_elemento(cola_t* cola){
     if ((!cola) || (cola->cantidad == 0))
         return;
-    nodo_t *aux;
+    nodo_cola_t *aux;
     aux = (cola->nodo_inicio)->siguiente;
     free(cola->nodo_inicio);
     cola->nodo_inicio = aux;
@@ -161,9 +161,9 @@ int cola_borrar_al_final(cola_t * cola){
     if ((!cola) || (cola->cantidad == 0))
         return ERROR;
     if (cola->cantidad == 1){
-        borrar_primer_elemento(cola);
+        cola_borrar_primer_elemento(cola);
     }else{
-        borrar_ultimo_elemento(cola);
+        cola_borrar_ultimo_elemento(cola);
     }
     return 0;
 }
@@ -175,12 +175,12 @@ o no se termine la cola enlazada
 * Post: cantidad de elementos recorridos y funcion ejecutada 
 *con cada elemento hasta que corte
 */
-size_t mover_por_nodos(nodo_t *nodo, bool (*funcion)(void *, void *), void *contexto){
+size_t cola_mover_por_nodos(nodo_cola_t *nodo, bool (*funcion)(void *, void *), void *contexto){
     if (!nodo)
         return 0;
     if (!funcion(nodo->elemento, contexto))
         return 0;
-    return 1 + mover_por_nodos(nodo->siguiente, funcion, contexto);
+    return 1 + cola_mover_por_nodos(nodo->siguiente, funcion, contexto);
 }
 
 /*
@@ -188,10 +188,10 @@ size_t mover_por_nodos(nodo_t *nodo, bool (*funcion)(void *, void *), void *cont
 * Pre: nodo_inicio perteneciente a la cola para destruir
 * Post: Todos los nodo liberados de la memoria dinamica
 */
-void nodo_destruir(nodo_t* nodo){
+void cola_nodo_destruir(nodo_cola_t* nodo){
     if(!nodo) 
         return;
-    nodo_destruir(nodo->siguiente);
+    cola_nodo_destruir(nodo->siguiente);
     free(nodo);
 }
 
@@ -221,14 +221,14 @@ int cola_encolar(cola_t* cola, void* elemento){
     if (!cola)
         return ERROR;
     if (cola->cantidad == 0)
-        return crear_e_insertar_al_inicio(cola, elemento);
-    return crear_e_insertar_al_final(cola, elemento);
+        return cola_crear_e_insertar_al_inicio(cola, elemento);
+    return cola_crear_e_insertar_al_final(cola, elemento);
 }
 
 int cola_desencolar(cola_t* cola){
     if ((!cola) || (cola->cantidad == 0))
         return ERROR;
-    borrar_primer_elemento(cola);
+    cola_borrar_primer_elemento(cola);
     return 0;
 }
 
@@ -242,6 +242,6 @@ void cola_destruir(cola_t* cola){
     if (!cola)
         return;
     if(cola->cantidad != 0)
-        nodo_destruir(cola->nodo_inicio);
+        cola_nodo_destruir(cola->nodo_inicio);
     free(cola);
 }
