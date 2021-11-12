@@ -6,13 +6,10 @@
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
-#include <signal.h>
-#include <stddef.h>
 
 #define ERROR -1
 #define EXITO 0
 
-#define RESET "\e[0;0m"
 #define LIMPIAR "clear"
 
 //apertura de archivos
@@ -23,6 +20,7 @@
 // FONDO "\e[0;47m"
 // SUBRAYADO "\e[4;37m"
 // PARPADEO "\e[5;37m"
+#define RESET "\e[0;0m"
 #define NEGRO "\e[0;30m"
 #define ROJO "\e[0;31m"
 #define VERDE "\e[0;32m"
@@ -83,27 +81,5 @@ void limpiar_buffer();
 * (buffer liberado para una próxima lectura)
 */
 char* leer_linea(char* buffer, int tam_buffer, FILE* archivo);
-
-/*
-*Imprime por pantalla una prueba con su descripcion
-*Si la afirmación no se cumple se considera un error
-*/
-void test_afirmar(int afirmacion, const char *descripcion);
-
-/*
-*Muestra por pantalla el título para un nuevo grupo
-*/
-void test_nuevo_grupo(const char *descripcion);
-
-/*
-*Muestra por pantalla el título y una separación para un
-*nuevo subgrupo
-*/
-void test_nuevo_sub_grupo(const char *descripcion);
-
-/*
-*Muestra por pantalla la cantidad de pruebas corridas y errores
-*/
-void test_mostrar_reporte();
 
 #endif /* __TOOLS_H__ */
