@@ -18,7 +18,6 @@ int inicializar_pila_con_varios_elementos(pila_t * pila, int (*insercion)(pila_t
 }
 
 void pila_pruebas_basicas(){
-    test_nuevo_sub_grupo("OPERACIONES DE PILA");
     pila_t *pila = pila_crear();
 
     test_nuevo_sub_grupo("Apilar");
@@ -42,7 +41,7 @@ void pila_pruebas_basicas(){
 }
 
 void pila_pruebas_creacion(){
-    test_nuevo_sub_grupo("OPERACIONES DE CREACIÓN");
+    test_nuevo_sub_grupo("Operaciones de creación");
     pila_t * pila= pila_crear();
     test_afirmar(pila != NULL, "Se crea una pila");
     test_afirmar(pila_vacia(pila), "La pila está vacia");

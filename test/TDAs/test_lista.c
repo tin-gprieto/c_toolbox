@@ -74,18 +74,17 @@ bool mostrar_3_elementos(void *elemento, void *contador){
 }
 
 void lista_pruebas_it_interno(){
-    test_nuevo_sub_grupo("OPERACIONES CON ITERADOR INTERNO");
     lista_t *lista = lista_crear();
     inicializar_con_varios_elementos(lista, lista_insertar, (int*)elementos, cant_elementos);
 
-    test_nuevo_sub_grupo("Recorrido completo");
+    test_nuevo_sub_grupo("Iteración interna completo");
     size_t elementos_recorridos = 0;
     printf("    ॰ Lista");
     elementos_recorridos = lista_con_cada_elemento(lista, mostrar_elemento, NULL);
     printf("\n");
     test_afirmar((elementos_recorridos == lista_elementos(lista)), "Se recorrió todos los elementos de la lista");
     
-    test_nuevo_sub_grupo("Recorrido parcial");
+    test_nuevo_sub_grupo("Iteración interna parcial");
     int contador = 0;
     printf("    ॰ Lista");
     elementos_recorridos = lista_con_cada_elemento(lista, mostrar_3_elementos, (void *)&contador);
@@ -93,7 +92,7 @@ void lista_pruebas_it_interno(){
     test_afirmar((elementos_recorridos == 3), "Se recorrió los primeros 3 elementos de la lista");
     lista_destruir(lista);
 
-    test_nuevo_sub_grupo("Recorrido con lista vacía");
+    test_nuevo_sub_grupo("Iteración interna con lista vacía");
     lista_t* lista_vacia = lista_crear();
     elementos_recorridos = lista_con_cada_elemento(lista_vacia, mostrar_elemento, NULL);
     test_afirmar(elementos_recorridos == 0, "No se recorre ningún elemento de una lista vacía");
@@ -154,14 +153,13 @@ void iterar_lista_vacia(){
 }
 
 void lista_pruebas_it_externo(){
-    test_nuevo_sub_grupo("OPERACIONES CON ITERADOR EXTERNO");
-    test_nuevo_sub_grupo("Iteración de varios elementos");
+    test_nuevo_sub_grupo("Iteración externa de varios elementos");
     iterar_varios_elementos();
     
-    test_nuevo_sub_grupo("Iteración de un solo elemento");
+    test_nuevo_sub_grupo("Iteración externa de un solo elemento");
     iterar_un_solo_elemento();
     
-    test_nuevo_sub_grupo("Iteración de una lista vacía");
+    test_nuevo_sub_grupo("Iteración externa de una lista vacía");
     iterar_lista_vacia();
 }
 
@@ -275,7 +273,6 @@ void insertar_muchos_elementos(){
 }
 
 void lista_pruebas_avanzadas(){
-    test_nuevo_sub_grupo("OPERACIONES AVANZADAS DE LISTA");
     int elementos[] = {1, 2, 3, 4, 5, 6};
     size_t cant_elementos = 6;
     test_nuevo_sub_grupo("Insertar varios elementos");
@@ -301,7 +298,6 @@ void lista_pruebas_avanzadas(){
 }
 
 void lista_pruebas_basicas(){
-    test_nuevo_sub_grupo("OPERACIONES DE LISTA");
     int segundo_elemento = 2;
     int primer_elemento = 1;
     lista_t *lista = lista_crear();
@@ -335,7 +331,7 @@ void lista_pruebas_basicas(){
 }
 
 void lista_pruebas_creacion(){
-    test_nuevo_sub_grupo("OPERACIONES DE CREACIÓN");
+    test_nuevo_sub_grupo("Operaciones de creación");
     lista_t * lista= lista_crear();
     test_afirmar(lista != NULL, "Se crea una lista");
     test_afirmar(lista_vacia(lista), "La lista está vacia");

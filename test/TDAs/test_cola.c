@@ -19,7 +19,6 @@ int inicializar_cola_con_varios_elementos(cola_t * cola, int (*insercion)(cola_t
 }
 
 void cola_pruebas_basicas(){
-    test_nuevo_sub_grupo("OPERACIONES DE COLA");
     cola_t *cola = cola_crear();
 
     test_nuevo_sub_grupo("Encolar");
@@ -43,7 +42,7 @@ void cola_pruebas_basicas(){
 }
 
 void cola_pruebas_creacion(){
-    test_nuevo_sub_grupo("OPERACIONES DE CREACIÓN");
+    test_nuevo_sub_grupo("Operaciones de creación");
     cola_t * cola= cola_crear();
     test_afirmar(cola != NULL, "Se crea una cola");
     test_afirmar(cola_vacia(cola), "La cola está vacia");
