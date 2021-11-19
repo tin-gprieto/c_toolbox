@@ -1,4 +1,4 @@
-V = valgrind
+V = valgreen
 CFLAGS = -std=c99 -g -O0
 GFLAGS = -tui
 WFLAGS = -Wall -Wconversion -Werror
