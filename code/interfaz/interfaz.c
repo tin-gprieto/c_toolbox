@@ -439,7 +439,7 @@ int menu_inicializar_opciones(interfaz_t* interfaz, size_t pos_menu){
 /****************************       FUNCIONES INTERFAZ .H       ***********************************/
 
 //interfaz.h
-estetica_t set_estetica(char color_fondo[MAX_COLOR], char color_letras[MAX_COLOR], char color_titulos[MAX_COLOR]){
+estetica_t interfaz_set_estetica(char color_fondo[MAX_COLOR], char color_letras[MAX_COLOR], char color_titulos[MAX_COLOR]){
     estetica_t estetica;
     strcpy(estetica.color_fondo, color_fondo);
     strcpy(estetica.color_letras, color_letras);
@@ -448,7 +448,7 @@ estetica_t set_estetica(char color_fondo[MAX_COLOR], char color_letras[MAX_COLOR
 }
 
 //interfaz.h
-dimension_t set_dimension(size_t maximo, size_t margen, size_t espaciado){
+dimension_t interfaz_set_dimension(size_t maximo, size_t margen, size_t espaciado){
     dimension_t dimension;
     dimension.max = maximo;
     dimension.margen = margen;
@@ -487,7 +487,7 @@ interfaz_t* interfaz_crear(dimension_t dimension, estetica_t estetica){
 }
 
 //interfaz.h
-void menu_eliminar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion){
+void interfaz_menu_eliminar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion){
     if(!interfaz || pos_menu >= interfaz->cant_menus){
         interfaz_reportar_error(interfaz, "Interfaz o Menú inválidos");
         return;
@@ -504,7 +504,7 @@ void menu_eliminar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion){
 }
 
 //interfaz.h
-void menu_cargar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion, const char* descripcion){
+void interfaz_menu_cargar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion, const char* descripcion){
     if (!interfaz || pos_menu >= interfaz->cant_menus){
         interfaz_reportar_error(interfaz, "Interfaz o Menú inválidos");
         return;
@@ -517,7 +517,7 @@ void menu_cargar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion, cons
 }
 
 //interfaz.h
-int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION]){
+int interfaz_menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION]){
     if(!interfaz || !titulo)
         return ERROR;
     size_t espaciado = (interfaz->dimension.max - strlen(titulo)) / 2;
@@ -539,7 +539,7 @@ int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION]){
 }
 
 //interfaz.h
-void menu_mostrar(interfaz_t* interfaz, size_t pos_menu){
+void interfaz_menu_mostrar(interfaz_t* interfaz, size_t pos_menu){
     if(!interfaz || pos_menu >= interfaz->cant_menus){
         interfaz_reportar_error(interfaz, "Interfaz o Menú inválidos");
         return;
@@ -550,7 +550,7 @@ void menu_mostrar(interfaz_t* interfaz, size_t pos_menu){
 }
 
 //interfaz.h 
-int informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], funcion_grafica_t mostrar){
+int interfaz_informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], funcion_grafica_t mostrar){
     if(!interfaz || !mostrar || !titulo) 
         return ERROR;
     size_t espaciado = (interfaz->dimension.max - strlen(titulo)) / 2;
@@ -574,7 +574,7 @@ int informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], fun
 }
 
 //interfaz.h 
-void informacion_imprimir_linea(interfaz_t* interfaz, const char* color, const char* linea){
+void interfaz_informacion_imprimir_linea(interfaz_t* interfaz, const char* color, const char* linea){
     if (!interfaz){
         interfaz_reportar_error(interfaz, "Interfaz inválida");
         return;
@@ -583,7 +583,7 @@ void informacion_imprimir_linea(interfaz_t* interfaz, const char* color, const c
 }
 
 //interfaz.h 
-void informacion_mostrar(interfaz_t* interfaz, size_t pos_menu, void* informacion, void* aux){
+void interfaz_informacion_mostrar(interfaz_t* interfaz, size_t pos_menu, void* informacion, void* aux){
     if(!interfaz || pos_menu >= interfaz->cant_infos){
         interfaz_reportar_error(interfaz, "Interfaz o Menú inválidos");
         return;

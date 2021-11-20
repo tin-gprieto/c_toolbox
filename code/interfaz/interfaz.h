@@ -42,7 +42,7 @@ typedef void (*funcion_grafica_t)(interfaz_t*, void*, void*);
 * Pre : Colores válidos (constantes de tools.c)
 * Post: Valores almacenados en estetica_t
 */
-estetica_t set_estetica(char color_fondo[MAX_COLOR], char color_letras[MAX_COLOR], char color_titulos[MAX_COLOR]);
+estetica_t interfaz_set_estetica(char color_fondo[MAX_COLOR], char color_letras[MAX_COLOR], char color_titulos[MAX_COLOR]);
 
 /*
 * Dados las longitudes de anchura maxima, margen y espaciado devuelve 
@@ -50,7 +50,7 @@ estetica_t set_estetica(char color_fondo[MAX_COLOR], char color_letras[MAX_COLOR
 * Pre : Maximo distinto a 0
 * Post: Valores almacenados en dimension_t
 */
-dimension_t set_dimension(size_t maximo, size_t margen, size_t espaciado);
+dimension_t interfaz_set_dimension(size_t maximo, size_t margen, size_t espaciado);
 
 /* 
 * Crea la interfaz en memoria dinamica
@@ -79,14 +79,15 @@ char interfaz_estado(interfaz_t* interfaz);
 * Pre : Interfaz creada
 * Post: Nuevo menú en la interfaz
 */
-int menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION]);
+int interfaz_menu_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION]);
 
 /* 
 * Dada una interfaz, carga una letra y su descripcion para el menú
+* Opciones reservadas:- Salir:'S' - Volver:'B' - Avanzar:'N'
 * Pre : interfaz creada, menú dentro del rango posible
 * Post: Opcion y descripción cargados al final del menu
 */
-void menu_cargar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion, const char* descripcion);
+void interfaz_menu_cargar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion, const char* descripcion);
 
 /* 
 * Elimina una de las opciones del menu
@@ -94,7 +95,7 @@ void menu_cargar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion, cons
 * y la opcion que se desea eliminar
 * Post: Eliminar del vector opciones (dentro del menu) a la opcion deseada
 */
-void menu_eliminar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion);
+void interfaz_menu_eliminar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion);
 
 /*
 * Muestra un menú de la interfaz junto a sus opciones, dada su posición en la interfaz
@@ -102,14 +103,14 @@ void menu_eliminar_opcion(interfaz_t* interfaz, size_t pos_menu, char opcion);
 * Pre : Interfaz creada, pos_menu menor a la cantidad de menús insertados
 * Post: Información del menú por la pantalla y pide opción para avanzar (Las cargadas al menú + SALIR)
 */
-void menu_mostrar(interfaz_t* interfaz, size_t pos_menu);
+void interfaz_menu_mostrar(interfaz_t* interfaz, size_t pos_menu);
 
 /*
 * Inserta un menú información a la interfaz, junto con su título y la función que muestre la información
 * Pre : Interfaz creada y funcion_grafica_t implementada
 * Post: Nuevo menú info en la interfaz
 */
-int informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], funcion_grafica_t mostrar);
+int interfaz_informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], funcion_grafica_t mostrar);
 
 /*
 * Imprime por pantalla una línea(string) dentro de la interfaz
@@ -117,7 +118,7 @@ int informacion_insertar(interfaz_t* interfaz, char titulo[MAX_DESCRIPCION], fun
 * Pre : Interfaz creada y color válido
 * Post: Información por pantalla dentro de la interfaz
 */
-void informacion_imprimir_linea(interfaz_t* interfaz,  const char* color, const char* linea);
+void interfaz_informacion_imprimir_linea(interfaz_t* interfaz,  const char* color, const char* linea);
 
 /*
 * Dada una información y un auxiliar, muestra la información con el menú que corresponde:
@@ -125,7 +126,7 @@ void informacion_imprimir_linea(interfaz_t* interfaz,  const char* color, const 
 * pasados que correspondan con los tipos de datos que maneja la función grafica de dicho menu.
 * Post: Información con el menú impreso por la pantalla y pide opción para avanzar (AVANZAR)
 */
-void informacion_mostrar(interfaz_t* interfaz, size_t pos_menu, void* informacion, void* aux);
+void interfaz_informacion_mostrar(interfaz_t* interfaz, size_t pos_menu, void* informacion, void* aux);
 
 /*
 * Dado un string constante, imprime por pantalla su mensaje de forma tal que
