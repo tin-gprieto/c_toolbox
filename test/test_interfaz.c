@@ -9,7 +9,7 @@ typedef struct estructura{
 }estructura_t;
 
 void funcion_mostrar_linea(interfaz_t* interfaz, void* nada, void* aux_nada){
-    informacion_imprimir_linea(interfaz, BLANCO, "Informacion linea");
+    interfaz_informacion_imprimir_linea(interfaz, BLANCO, "Informacion linea");
 }
 
 void funcion_mostrar(interfaz_t* interfaz, void* info, void* aux){
@@ -18,18 +18,18 @@ void funcion_mostrar(interfaz_t* interfaz, void* info, void* aux){
     for(size_t i = 0; i < tope; i++){
         char linea[200];
         sprintf(linea, "%i - %s", vector->numero[i], vector->string[i]);
-        informacion_imprimir_linea((interfaz_t*)interfaz, VERDE, linea);
+        interfaz_informacion_imprimir_linea((interfaz_t*)interfaz, VERDE, linea);
     }
 }
 
 void inicializar_menu(interfaz_t* interfaz){
-    menu_cargar_opcion(interfaz, 0, 'A', "Primer_opcion"); 
-    menu_cargar_opcion(interfaz, 0, 'B', "Segunda_opcion"); 
-    menu_cargar_opcion(interfaz, 0, 'C', "Tercer_opcion");
-    menu_cargar_opcion(interfaz, 0, 'D', "Cuarta_opcion");
-    menu_cargar_opcion(interfaz, 1, 'A', "Primer_opcion"); 
-    menu_cargar_opcion(interfaz, 1, 'B', "Segunda_opcion"); 
-    menu_cargar_opcion(interfaz, 1, 'C', "Tercer_opcion");
+    interfaz_menu_cargar_opcion(interfaz, 0, '1', "Primer_opcion"); 
+    interfaz_menu_cargar_opcion(interfaz, 0, '2', "Segunda_opcion"); 
+    interfaz_menu_cargar_opcion(interfaz, 0, '3', "Tercer_opcion");
+    interfaz_menu_cargar_opcion(interfaz, 0, '4', "Cuarta_opcion");
+    interfaz_menu_cargar_opcion(interfaz, 1, '1', "Primer_opcion"); 
+    interfaz_menu_cargar_opcion(interfaz, 1, '2', "Segunda_opcion"); 
+    interfaz_menu_cargar_opcion(interfaz, 1, '3', "Tercer_opcion");
 
 }
 
@@ -46,24 +46,24 @@ void inicializar_informacion(estructura_t* estructura){
 }
 
 int main(){
-    interfaz_t* interfaz = interfaz_crear(set_dimension(70,20,10), set_estetica(FONDO_NEGRO, BLANCO, AMARILLO));
+    interfaz_t* interfaz = interfaz_crear(interfaz_set_dimension(70,20,10), interfaz_set_estetica(FONDO_NEGRO, BLANCO, AMARILLO));
     if(!interfaz){
         warning("la creación del interfaz");
     }
     
-    menu_insertar(interfaz, "Menu inicio");
-    menu_insertar(interfaz, "Menu desarrollo");
-    informacion_insertar(interfaz, "Informacion varia", funcion_mostrar);
-    informacion_insertar(interfaz, "Informacion linea", funcion_mostrar_linea);
+    interfaz_menu_insertar(interfaz, "Menu inicio");
+    interfaz_menu_insertar(interfaz, "Menu desarrollo");
+    interfaz_informacion_insertar(interfaz, "Informacion varia", funcion_mostrar);
+    interfaz_informacion_insertar(interfaz, "Informacion linea", funcion_mostrar_linea);
     
     inicializar_menu(interfaz);
     estructura_t estructura;
     inicializar_informacion(&estructura);
     
-    menu_mostrar(interfaz, 0);
-    menu_mostrar(interfaz, 1);
-    informacion_mostrar(interfaz, 0, &estructura, NULL);
-    informacion_mostrar(interfaz, 1, NULL, NULL);
+    interfaz_menu_mostrar(interfaz, 0);
+    interfaz_menu_mostrar(interfaz, 1);
+    interfaz_informacion_mostrar(interfaz, 0, &estructura, NULL);
+    interfaz_informacion_mostrar(interfaz, 1, NULL, NULL);
 
     int numero = atoi(interfaz_pedir_string(interfaz, "un numero"));
     printf("Número ingresado: %i \n", numero);
