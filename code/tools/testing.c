@@ -1,7 +1,8 @@
 #include "testing.h"
+#define FONDO_VERDE "\e[1;42m"
 
-int __test_cantidad_de_pruebas_corridas = 0;
-int __test_cantidad_de_pruebas_fallidas = 0;
+size_t __test_cantidad_de_pruebas_corridas = 0;
+size_t __test_cantidad_de_pruebas_fallidas = 0;
 const char *__test_prueba_actual = NULL;
 
 void __test_atajarse(void (*handler)(int)){
@@ -24,13 +25,15 @@ void __test_morir(int signum){
 void test_afirmar(int afirmacion, const char *descripcion){
     __test_prueba_actual = descripcion;
     __test_atajarse(__test_morir);
+    
     if (afirmacion) {
-        printf(VERDE "   %s " ,TILDE);
+        printf(VERDE "   %s ", TILDE);
     }else{
         __test_cantidad_de_pruebas_fallidas++;
-        printf(ROJO "   %s ",CRUZ);
+        printf(ROJO "   %s ", CRUZ);
     }
-    printf(BLANCO " %s\n", __test_prueba_actual);
+    if(__test_cantidad_de_pruebas_corridas < 9) printf(BLANCO "0");
+    printf(BLANCO "%li - %s\n",__test_cantidad_de_pruebas_corridas + 1, __test_prueba_actual);
     fflush(stdout);
     __test_prueba_actual = NULL;
     __test_cantidad_de_pruebas_corridas++;
@@ -48,13 +51,29 @@ void test_nuevo_sub_grupo(const char *descripcion){
     printf(CYAN "\n   %s\n" RESET, descripcion);
 }
 
+void reporte_barra_porcentaje(size_t cantidad, size_t total){
+
+    float porcentaje = (((float)cantidad)/(float)total);
+    float tamanio_barra = 30;
+
+    printf("    |");
+    for(int i = 0; i < porcentaje * tamanio_barra; i++)
+        printf(FONDO_VERDE " ");
+    for(int i = 0; i < tamanio_barra - (porcentaje * tamanio_barra); i++)
+        printf(BLANCO " ");
+        
+    printf(BLANCO "|   %.1f °/. \n\n\n", porcentaje*100);
+}
+
 void test_mostrar_reporte(){
-    printf(BLANCO "\n   ---------------------------------\n");
-    printf("    %i pruebas corridas - %i errores -" RESET,
+    printf(BLANCO "   ____________________________________________\n");
+    printf("\n    %li pruebas corridas - %li errores -" RESET,
            __test_cantidad_de_pruebas_corridas,
            __test_cantidad_de_pruebas_fallidas);
     if(__test_cantidad_de_pruebas_fallidas == 0 )
         printf(VERDE " OK \n\n" RESET);
     else
         printf(ROJO " ERROR \n\n" RESET);
+    size_t cantidad_pruebas_pasadas = __test_cantidad_de_pruebas_corridas - __test_cantidad_de_pruebas_fallidas;
+    reporte_barra_porcentaje(cantidad_pruebas_pasadas, __test_cantidad_de_pruebas_corridas);
 }

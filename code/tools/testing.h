@@ -2,6 +2,7 @@
 #define __TESTING_H__
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <signal.h>
 #include <stddef.h>
 
