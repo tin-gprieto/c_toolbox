@@ -1,5 +1,7 @@
 #include "tools.h"
-#define MAX_BAR 10
+
+const int MAX_BAR = 10;
+const char* FILE_DELIM = ".";
 
 void warning(const char * descripcion){
     printf(ROJO "%s - Hubo un problema con %s" RESET "\n", CRUZ, descripcion);
@@ -36,27 +38,31 @@ char* leer_linea(char* buffer, int tam_buffer, FILE* archivo){
     return linea_leida;
 }
 
-char* barra_porcentaje(size_t cantidad, size_t total, size_t tamanio_barra){
-    if(total == 0 || tamanio_barra == 0) return NULL;
-    if(cantidad > total) return NULL; 
-
+void print_barra_porcentaje(size_t cantidad, size_t total, size_t tamanio_barra){
+    if(cantidad > total || total == 0 || tamanio_barra == 0) return;
     float porcentaje = (((float)cantidad)/(float)total);
+    float tamanio = (float) tamanio_barra;
 
-    char barra[tamanio_barra];
-    barra[0] = '[';
+    printf("\n    |");
+    for(int i = 0; i < porcentaje * tamanio; i++)
+        printf(FONDO_VERDE " ");
+    for(int i = 0; i < tamanio - (porcentaje * tamanio); i++)
+        printf(BLANCO " ");
+        
+    printf(BLANCO "|   %.1f °/. \n\n", porcentaje*100);
+}
 
-    for(int i = 1; i < porcentaje * (float)tamanio_barra; i++)
-        barra[i] = '=';
-
-    for(int i = 1; i< tamanio_barra; i++){
-        if(barra[i] != '=')
-            barra[i] = ' ';    
+char* buscar_extension(char* ruta_archivo){
+    char* string_partido = strtok(ruta_archivo, FILE_DELIM);
+    char* siguiente_lectura = strtok(NULL, FILE_DELIM);
+    while(siguiente_lectura != NULL){
+        string_partido = siguiente_lectura;
+        siguiente_lectura = strtok(NULL, FILE_DELIM);
     }
+    return string_partido;
+}
 
-    barra[tamanio_barra - 1] = ']';
-
-    char* resultado = calloc(tamanio_barra + 20, sizeof(char));
-    if(!resultado)  return NULL;
-    sprintf(resultado, "%s      %.1f °/. \n", barra, porcentaje*100);
-    return resultado;
+bool ruta_corroborar_extension(char* ruta_archivo, const char* extension){
+    char* ruta_extension = buscar_extension(ruta_archivo);
+    return (ruta_extension && strcmp(ruta_extension, extension) == 0) ? true : false;
 }

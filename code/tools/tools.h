@@ -50,16 +50,16 @@
 #define MAX_COLS 80
 
 /*
-*Imprime por pantalla un array de numeros dada la cantidad de elementos
+* Imprime por pantalla un array de numeros dada la cantidad de elementos
 */
 void print_array(int* array, size_t size);
 
 /*
-* Devuelve una barra de porcentaje, teniendo el total y la cantidad sobre el mismo
-* Pre : cantidad < total, ni total ni tamanio == 0
-* Post: NULL en caso de error o puntero a str con barra (SE DEBE LIBERAR)
+* Imprime una barra de porcentaje en pantalla, teniendo el total y la cantidad sobre el mismo
+* Pre : cantidad < total, ni total ni tamanio pueden ser iguales a 0
+* Post: Imágen por pantalla
 */
-char* barra_porcentaje(size_t cantidad, size_t total, size_t tamanio_barra);
+void print_barra_porcentaje(size_t cantidad, size_t total, size_t tamanio_barra);
 
 /*
 *Imprime por pantalla una advertencia según description
@@ -81,5 +81,14 @@ void limpiar_buffer();
 * (buffer liberado para una próxima lectura)
 */
 char* leer_linea(char* buffer, int tam_buffer, FILE* archivo);
+
+/*
+* Dado un string, preferentemente referido a un archivo, chequea 
+* si la extension del mismo coincide con la pasada por parámetro
+* Pre : String de una ruta de archivo
+* Post: Verdadero si cumple con la extension
+        Falso si es vacío, no tiene extension o es una distinta
+*/
+bool ruta_corroborar_extension(char* ruta_archivo, const char* extension);
 
 #endif /* __TOOLS_H__ */
