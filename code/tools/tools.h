@@ -89,6 +89,6 @@ char* leer_linea(char* buffer, int tam_buffer, FILE* archivo);
 * Post: Verdadero si cumple con la extension
         Falso si es vacío, no tiene extension o es una distinta
 */
-bool ruta_corroborar_extension(char* ruta_archivo, const char* extension);
+bool ruta_cumple_extension(char* ruta_archivo, const char* extension);
 
 #endif /* __TOOLS_H__ */

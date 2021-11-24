@@ -62,7 +62,7 @@ char* buscar_extension(char* ruta_archivo){
     return string_partido;
 }
 
-bool ruta_corroborar_extension(char* ruta_archivo, const char* extension){
+bool ruta_cumple_extension(char* ruta_archivo, const char* extension){
     char* ruta_extension = buscar_extension(ruta_archivo);
     return (ruta_extension && strcmp(ruta_extension, extension) == 0) ? true : false;
 }
