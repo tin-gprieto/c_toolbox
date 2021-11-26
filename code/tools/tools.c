@@ -1,6 +1,7 @@
 #include "tools.h"
 
 const int MAX_BAR = 10;
+const int MAX_STRING = 1024;
 const char* FILE_DELIM = ".";
 
 void warning(const char * descripcion){
@@ -63,7 +64,8 @@ char* buscar_extension(char* ruta_archivo){
 }
 
 bool ruta_cumple_extension(const char* ruta_archivo, const char* extension){
-    char* aux = (char*)ruta_archivo;
+    char aux[MAX_STRING];
+    strcpy(aux, ruta_archivo);
     char* ruta_extension = buscar_extension(aux);
     return (ruta_extension && strcmp(ruta_extension, extension) == 0) ? true : false;
 }

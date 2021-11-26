@@ -14,12 +14,16 @@ int main(){
     const char str_incorrecto [MAX_STR]= "hola.txt";
     
     test_nuevo_grupo("Test corroborar extension");
+    printf("\n    %s - %s - %s - %s - %s - %s \n",
+        str_vacio, str_sin_extension, str_correcto, str_incorrecto, str_con_dos_extensiones_correcto, str_con_dos_extensiones_incorrecto);
     test_afirmar(!ruta_cumple_extension(str_vacio, extension), "Un string vacío no corrobora");
     test_afirmar(!ruta_cumple_extension(str_sin_extension, extension), "Un string sin extension no corrobora"); 
     test_afirmar(ruta_cumple_extension(str_correcto, extension), "Un string que tiene la extensión corrobora");
     test_afirmar(!ruta_cumple_extension(str_incorrecto, extension), "Un string que tiene la extensión distinta no corrobora");
     test_afirmar(ruta_cumple_extension(str_con_dos_extensiones_correcto, extension),  "Un string con otro punto pero termina con la extensión corrobora");
     test_afirmar(!ruta_cumple_extension(str_con_dos_extensiones_incorrecto, extension), "Un string con otro punto y sin que termine con la extensión no corrobora");
+    printf("\n    %s - %s - %s - %s - %s - %s \n",
+        str_vacio, str_sin_extension, str_correcto, str_incorrecto, str_con_dos_extensiones_correcto, str_con_dos_extensiones_incorrecto);
     test_mostrar_reporte();
     test_nuevo_grupo("Test barra de porcentaje");
     print_barra_porcentaje(0,100,10);
