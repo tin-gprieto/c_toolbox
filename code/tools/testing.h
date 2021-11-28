@@ -27,6 +27,11 @@
 void test_afirmar(int afirmacion, const char *descripcion);
 
 /*
+*Muestra por pantalla el título del test
+*/
+void test_titulo(const char *descripcion);
+
+/*
 *Muestra por pantalla el título para un nuevo grupo
 */
 void test_nuevo_grupo(const char *descripcion);
